@@ -1,0 +1,4 @@
+# Ignore cmake-build-debug directory and all its content
+application/cmake-build-debug/
+application/.idea/
+.idea
