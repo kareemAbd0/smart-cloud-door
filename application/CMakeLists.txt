@@ -16,7 +16,9 @@ add_executable(smart_cloud_door main.cpp
         hw/led.cpp
         hw/led.h
         hw/keypad.cpp
-        hw/keypad.h)
+        hw/keypad.h
+        app/app.cpp
+        app/app.h)
 
 target_link_libraries(smart_cloud_door SOCI::soci_core SOCI::soci_odbc)
 

@@ -19,12 +19,12 @@ public:
     ERR_STATUS get_char(char &result);
 
 
-    ERR_STATUS get_status(char &result);
 
 private:
     int keypad_num;
 
-    const std::string PATH_KEYPAD = "/sys/class/keypad/";
+    //const std::string PATH_KEYPAD = "/sys/class/keypad/";
+    const std::string PATH_KEYPAD = "/sys/class/keypad_4x3/keypad";
 
     std::string path_char = PATH_KEYPAD + "/keypadChar";
     std::ifstream file_char;
@@ -33,10 +33,14 @@ private:
     std::ofstream file_polling;
 
     std::string path_status = PATH_KEYPAD + "/keypadStatus";
-    std::ifstream file_status;
+    std::fstream file_status;
 
 
 
     ERR_STATUS set_polling(char value);
+
+    ERR_STATUS get_status(char &result);
+
+    ERR_STATUS set_status(char value);
 
 };

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include "hw/keypad.h"
 #include "database/database.h"
 
 int main() {
@@ -20,6 +21,17 @@ int main() {
     Database db(connection_string, 1);
 
     db.connect();
+
+    Keypad keypad(1);
+    int id = 0;
+
+    keypad.get_id(4,id);
+
+    std::cout << "ID: " << id << std::endl;
+
+
+
+
 
 
     // int id = 1365;
