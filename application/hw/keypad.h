@@ -10,20 +10,22 @@
 
 class Keypad {
 public:
-
     explicit Keypad(int num);
 
-    ERR_STATUS get_id(int length, int &result);
+    ERR_STATUS get_id(int length, std::string &result);
 
 
     ERR_STATUS get_char(char &result);
 
-
-
-private:
     int keypad_num;
 
-    //const std::string PATH_KEYPAD = "/sys/class/keypad/";
+private:
+    ERR_STATUS set_polling(char value);
+
+    ERR_STATUS get_status(char &result);
+
+    ERR_STATUS set_status(char value);
+
     const std::string PATH_KEYPAD = "/sys/class/keypad_4x3/keypad";
 
     std::string path_char = PATH_KEYPAD + "/keypadChar";
@@ -32,15 +34,6 @@ private:
     std::string path_polling = PATH_KEYPAD + "/keypadPolling";
     std::ofstream file_polling;
 
-    std::string path_status = PATH_KEYPAD + "/keypadStatus";
+    std::string path_status = PATH_KEYPAD + "/keypadState";
     std::fstream file_status;
-
-
-
-    ERR_STATUS set_polling(char value);
-
-    ERR_STATUS get_status(char &result);
-
-    ERR_STATUS set_status(char value);
-
 };

@@ -37,6 +37,8 @@ public:
 
     ER_STATUS send_query(const std::string &query);
 
+   ER_STATUS retrieve_fname(int employee_id, std::string &name);
+
     ~Database() = default;
 
 private:

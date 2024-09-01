@@ -11,10 +11,19 @@
 #include "keypad.h"
 
 
-Keypad::Keypad(int num): keypad_num(num) {
+Keypad::Keypad(int num): keypad_num(num), file_char(path_char), file_polling(path_polling), file_status(path_status) {
+    if (!file_char.is_open()) {
+        std::cerr << "Failed to open " << path_char << std::endl;
+    }
+    if (!file_polling.is_open()) {
+        std::cerr << "Failed to open " << path_polling << std::endl;
+    }
+    if (!file_status.is_open()) {
+        std::cerr << "Failed to open " << path_status << std::endl;
+    }
 }
 
-ERR_STATUS Keypad::get_id(int length, int &result) {
+ERR_STATUS Keypad::get_id(int length, std::string &result) {
     ERR_STATUS err = GOOD;
     set_polling(1);
     std::string id;
@@ -25,20 +34,20 @@ ERR_STATUS Keypad::get_id(int length, int &result) {
         char c;
         get_status(out);
 
+        std::cout << "here outside: " << out  << std::endl;
+
         if (out == '1') {
             get_char(c);
-            if (c != '0') {
-                id += c;
-            }
+            id += c;
+            std::cout << "here inside: " << c << std::endl;
             set_status('0');
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(2));
-
     }
 
     set_status('0');
 
-    result = std::stoi(id);
+    result = id;
     return err;
 }
 

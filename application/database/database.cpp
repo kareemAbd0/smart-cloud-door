@@ -6,7 +6,6 @@
 #include <utility>
 #include <memory>
 #include <soci/soci.h>
-#include <soci/odbc/soci-odbc.h>
 #include "database.h"
 
 
@@ -17,7 +16,7 @@ Database::Database(std::string connection_string, const int door_id) : connectio
 
 ER_STATUS Database::connect() {
     try {
-        sql = std::make_unique<soci::session>(soci::session(soci::odbc, connection_string));
+        sql = std::make_unique<soci::session>("postgresql", connection_string);
         std::cout << "Connected to database" << std::endl;
 
         return ER_STATUS::SUCCESS;
@@ -58,26 +57,26 @@ VERIFY_RESULT Database::verify_id(int employee_id) {
 
 
 ER_STATUS Database::log_entry(int employee_id, bool access_granted) {
+try {
 
-    try {
-        if (employee_id != 0) {
-            std::string query = "INSERT INTO AccessLogs (EmployeeID, DoorID, AccessTime, AccessGranted) VALUES (" +
-                                std::to_string(employee_id) + ", "
-                                + std::to_string(door_id) + ", GETDATE(), " + std::to_string(access_granted) + ")";
-            *sql << query;
-        } else {
-
-
-            // If the employee id is 0, then the id does not exist in the database
-            std::string query = "INSERT INTO AccessLogs (EmployeeID, DoorID, AccessTime, AccessGranted) VALUES (NULL, "
-                                + std::to_string(door_id) + ", GETDATE(), " + std::to_string(access_granted) + ")";
-            *sql << query;
-        }
-        return ER_STATUS::SUCCESS;
-    } catch (std::exception const &e) {
-        std::cerr << "Error: " << e.what() << std::endl;
-        return ER_STATUS::FAILURE;
+    std::string access_granted_str = access_granted ? "true" : "false";
+    if (employee_id != 0) {
+        std::string query = "INSERT INTO AccessLogs (EmployeeID, DoorID, AccessTime, AccessGranted) VALUES (" +
+                            std::to_string(employee_id) + ", "
+                            + std::to_string(door_id) + ", CURRENT_TIMESTAMP, " + access_granted_str + ")";
+        *sql << query;
+    } else {
+        // If the employee id is 0, then the id does not exist in the database
+        std::string query = "INSERT INTO AccessLogs (EmployeeID, DoorID, AccessTime, AccessGranted) VALUES (NULL, "
+                            + std::to_string(door_id) + ", CURRENT_TIMESTAMP, " + access_granted_str + ")";
+        *sql << query;
     }
+    return ER_STATUS::SUCCESS;
+} catch (std::exception const &e) {
+    std::cerr << "Error: " << e.what() << std::endl;
+    return ER_STATUS::FAILURE;
+}
+
 }
 
 int Database::get_door_id() const {
@@ -93,6 +92,22 @@ ER_STATUS Database::send_query(const std::string &query) {
         std::cerr << "Error: " << e.what() << std::endl;
         return ER_STATUS::FAILURE;
     }
+}
+
+ER_STATUS Database::retrieve_fname(int employee_id, std::string &name) {
+
+    try {
+        *sql << "SELECT EmployeeName FROM Employees WHERE EmployeeID = " << employee_id, soci::into(name);
+
+        //get first name from full name
+        name = name.substr(0, name.find(' '));
+
+        return ER_STATUS::SUCCESS;
+    } catch (std::exception const &e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        return ER_STATUS::FAILURE;
+    }
+
 }
 
 

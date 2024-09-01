@@ -23,9 +23,9 @@ public:
 
     ERR_STATUS clear_display();
 
-private:
     int lcd_num;
 
+private:
     ~Lcd();
 
 
