@@ -26,7 +26,9 @@ ERR_STATUS Lcd::display_text(const std::string& message) {
 
     ERR_STATUS err = GOOD;
     if (file_txt.is_open()) {
+        file_txt.seekp(0);  // Reset file pointer to the beginning
         file_txt << message;
+        file_txt.flush();
     } else {
         std::cout << "Failed to open " << path_txt << std::endl;
         return NO_FILE;
@@ -45,7 +47,9 @@ ERR_STATUS Lcd::change_position(const std::string& message) {
 
 
     if (file_xy.is_open()) {
+        file_xy.seekp(0);
         file_xy << message;
+        file_xy.flush();
     } else {
         std::cout << "Failed to open " << path_xy << std::endl;
         return NO_FILE;
@@ -60,7 +64,9 @@ ERR_STATUS Lcd::send_command(const std::string& message) {
     ERR_STATUS err = GOOD;
 
     if (file_cmd.is_open()) {
+        file_cmd.seekp(0);
         file_cmd << message;
+        file_cmd.flush();
     } else {
         std::cout << "Failed to open " << path_cmd << std::endl;
         return NO_FILE;
@@ -71,7 +77,9 @@ ERR_STATUS Lcd::send_command(const std::string& message) {
 ERR_STATUS Lcd::clear_display() {
     ERR_STATUS err = GOOD;
     if (file_cmd.is_open()) {
+        file_cmd.seekp(0);
         file_cmd << "0x01";
+        file_cmd.flush();
     } else {
         std::cout << "Failed to open " << path_cmd << std::endl;
         return NO_FILE;
