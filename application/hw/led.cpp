@@ -24,7 +24,9 @@ ERR_STATUS Led::init() {
     ERR_STATUS err = GOOD;
 
     if (file_direction.is_open()) {
+        file_direction.seekp(0);
         file_direction << "out";
+        file_direction.flush();
     } else {
         std::cout << "Failed to open " << path_direction << std::endl;
         return NO_FILE;
@@ -37,7 +39,9 @@ ERR_STATUS Led::turn_on() {
     ERR_STATUS err = GOOD;
 
     if (file_value.is_open()) {
+        file_value.seekp(0);
         file_value << "1";
+        file_value.flush();
     } else {
         std::cout << "Failed to open " << path_value << std::endl;
         return NO_FILE;
@@ -48,7 +52,9 @@ ERR_STATUS Led::turn_on() {
 ERR_STATUS Led::turn_off() {
     ERR_STATUS err = GOOD;
     if (file_value.is_open()) {
+        file_value.seekp(0);
         file_value << "0";
+        file_value.flush();
     } else {
         std::cout << "Failed to open " << path_value << std::endl;
         return NO_FILE;

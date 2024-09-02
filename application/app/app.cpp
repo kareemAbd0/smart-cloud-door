@@ -2,4 +2,55 @@
 // Created by kareem on 25/08/24.
 //
 
+
+#include <iostream>
+#include <string>
+#include <chrono>
+#include <thread>
 #include "app.h"
+
+App::App(Database &database, Lcd &lcd, Keypad &keypad, Led &led): database(database), lcd(lcd), keypad(keypad),
+                                                                  led(led) {
+}
+
+void App::tester() {
+    std::string id;
+    std::string name;
+    if (database.connect() == ERR_STATE::SUCCESS) {
+        std::cout << "Connected to database" << std::endl;
+    } else {
+        std::cout << "Failed to connect to database" << std::endl;
+    }
+
+    lcd.clear_display();
+
+    if (keypad.get_id(4, id) == GOOD) {
+        std::cout << "ID: " << id << std::endl;
+    } else {
+        std::cout << "Failed to get id" << std::endl;
+    }
+
+    lcd.clear_display();
+
+
+    VERIFY_RESULT result = database.verify_id(std::stoi(id));
+
+
+    if (result.id_status == ID_STATUS::AUTHORISED) {
+        database.retrieve_fname(std::stoi(id), name);
+        lcd.display_text("Authorised");
+        //delay
+        std::this_thread::sleep_for(std::chrono::seconds(3));
+        lcd.clear_display();
+        lcd.display_text("Welcome " + name);
+        std::cout << "Authorised" << std::endl;
+    } else if (result.id_status == ID_STATUS::NOT_AUTHORISED) {
+        lcd.display_text("Not Authorised");
+        std::cout << "Not Authorised" << std::endl;
+    } else if (result.id_status == ID_STATUS::NON_EXISTANT) {
+        lcd.display_text("This ID does");
+        lcd.change_position("20");
+        lcd.display_text("not exist");
+        std::cout << "This id does not exist" << std::endl;
+    }
+}

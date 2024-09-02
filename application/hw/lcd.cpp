@@ -7,8 +7,7 @@
 #include "lcd.h"
 
 
-Lcd::Lcd(int num)  : lcd_num(num),file_txt(path_txt),file_xy(path_xy),file_cmd(path_cmd) {
-
+Lcd::Lcd(int num) : lcd_num(num), file_txt(path_txt), file_xy(path_xy), file_cmd(path_cmd) {
     if (!file_txt.is_open()) {
         std::cerr << "Failed to open " << path_txt << std::endl;
     }
@@ -18,15 +17,13 @@ Lcd::Lcd(int num)  : lcd_num(num),file_txt(path_txt),file_xy(path_xy),file_cmd(p
     if (!file_cmd.is_open()) {
         std::cerr << "Failed to open " << path_cmd << std::endl;
     }
-
 };
 
 
-ERR_STATUS Lcd::display_text(const std::string& message) {
-
+ERR_STATUS Lcd::display_text(const std::string &message) {
     ERR_STATUS err = GOOD;
     if (file_txt.is_open()) {
-        file_txt.seekp(0);  // Reset file pointer to the beginning
+        file_txt.seekp(0); // Reset file pointer to the beginning
         file_txt << message;
         file_txt.flush();
     } else {
@@ -36,11 +33,11 @@ ERR_STATUS Lcd::display_text(const std::string& message) {
     return err;
 }
 
-ERR_STATUS Lcd::change_position(const std::string& message) {
-
+ERR_STATUS Lcd::change_position(const std::string &message) {
     ERR_STATUS err = GOOD;
 
-    if (message.size() != 2 || !isdigit(message[0]) || !isdigit(message[1]) || message[0] > '2' || message[1] > '5' || message[1] < '1' || message[0] < '0') {
+    if (message.size() != 2 || !isdigit(message[0]) || !isdigit(message[1]) || message[0] > '2' || message[1] > '5' ||
+        message[1] < '1' || message[0] < '0') {
         std::cout << "Invalid postion " << std::endl;
         return FAIL;
     }
@@ -58,9 +55,7 @@ ERR_STATUS Lcd::change_position(const std::string& message) {
 }
 
 
-ERR_STATUS Lcd::send_command(const std::string& message) {
-
-
+ERR_STATUS Lcd::send_command(const std::string &message) {
     ERR_STATUS err = GOOD;
 
     if (file_cmd.is_open()) {
@@ -92,4 +87,3 @@ Lcd::~Lcd() {
     file_xy.close();
     file_cmd.close();
 }
-

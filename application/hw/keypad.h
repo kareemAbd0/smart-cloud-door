@@ -4,13 +4,14 @@
 
 
 #pragma once
-#include "err.h"
 #include <fstream>
 #include <iostream>
 
+#include "lcd.h"
+#include "err.h"
 class Keypad {
 public:
-    explicit Keypad(int num);
+    Keypad(int num, Lcd &lcd);
 
     ERR_STATUS get_id(int length, std::string &result);
 
@@ -28,6 +29,8 @@ private:
     ERR_STATUS set_status(const std::string &value);
 
     ERR_STATUS get_polling(std::string &result);
+
+    Lcd &lcd;
 
     const std::string PATH_KEYPAD = "/sys/class/keypad_4x3/keypad";
 

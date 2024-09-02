@@ -9,7 +9,7 @@
 
 class Led {
 public:
-   explicit  Led(int num);
+    explicit Led(int num);
 
     ERR_STATUS init();
 
@@ -17,11 +17,11 @@ public:
 
     ERR_STATUS turn_off();
 
-private:
-    int led_num;
-
     ~Led();
 
+    int led_num;
+
+private:
     const std::string PATH_LED = "/sys/class/gpio-led";
 
 

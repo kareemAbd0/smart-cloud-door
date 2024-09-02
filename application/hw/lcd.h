@@ -25,10 +25,9 @@ public:
 
     int lcd_num;
 
-private:
     ~Lcd();
 
-
+private:
     const std::string PATH_LCD = "/sys/class/lcd_16x2/lcd";
 
     std::string path_txt = PATH_LCD + "/lcdtxt";
@@ -40,5 +39,3 @@ private:
     std::string path_cmd = PATH_LCD + "/lcdcmd";
     std::ofstream file_cmd;
 };
-
-

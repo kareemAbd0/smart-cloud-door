@@ -14,15 +14,15 @@ Database::Database(std::string connection_string, const int door_id) : connectio
 }
 
 
-ER_STATUS Database::connect() {
+ERR_STATE Database::connect() {
     try {
         sql = std::make_unique<soci::session>("postgresql", connection_string);
         std::cout << "Connected to database" << std::endl;
 
-        return ER_STATUS::SUCCESS;
+        return ERR_STATE::SUCCESS;
     } catch (std::exception const &e) {
         std::cerr << "Error: " << e.what() << std::endl;
-        return ER_STATUS::FAILURE;
+        return ERR_STATE::FAILURE;
     }
 }
 
@@ -40,43 +40,41 @@ VERIFY_RESULT Database::verify_id(int employee_id) {
             *sql << "SELECT DepartmentID FROM Doors WHERE DoorID = " << door_id, soci::into(door_department_id);
 
             if (employee_department_id == door_department_id) {
-                result = {ID_STATUS::AUTHORISED, ER_STATUS::SUCCESS};
+                result = {ID_STATUS::AUTHORISED, ERR_STATE::SUCCESS};
             } else {
-                result = {ID_STATUS::NOT_AUTHORISED, ER_STATUS::SUCCESS};
+                result = {ID_STATUS::NOT_AUTHORISED, ERR_STATE::SUCCESS};
             }
         } else {
-            result = {ID_STATUS::NON_EXISTANT, ER_STATUS::SUCCESS};
+            result = {ID_STATUS::NON_EXISTANT, ERR_STATE::SUCCESS};
         }
 
         return result;
     } catch (std::exception const &e) {
         std::cerr << "Error: " << e.what() << std::endl;
-        return {ID_STATUS::NOT_AUTHORISED, ER_STATUS::FAILURE};
+        return {ID_STATUS::NOT_AUTHORISED, ERR_STATE::FAILURE};
     }
 }
 
 
-ER_STATUS Database::log_entry(int employee_id, bool access_granted) {
-try {
-
-    std::string access_granted_str = access_granted ? "true" : "false";
-    if (employee_id != 0) {
-        std::string query = "INSERT INTO AccessLogs (EmployeeID, DoorID, AccessTime, AccessGranted) VALUES (" +
-                            std::to_string(employee_id) + ", "
-                            + std::to_string(door_id) + ", CURRENT_TIMESTAMP, " + access_granted_str + ")";
-        *sql << query;
-    } else {
-        // If the employee id is 0, then the id does not exist in the database
-        std::string query = "INSERT INTO AccessLogs (EmployeeID, DoorID, AccessTime, AccessGranted) VALUES (NULL, "
-                            + std::to_string(door_id) + ", CURRENT_TIMESTAMP, " + access_granted_str + ")";
-        *sql << query;
+ERR_STATE Database::log_entry(int employee_id, bool access_granted) {
+    try {
+        std::string access_granted_str = access_granted ? "true" : "false";
+        if (employee_id != 0) {
+            std::string query = "INSERT INTO AccessLogs (EmployeeID, DoorID, AccessTime, AccessGranted) VALUES (" +
+                                std::to_string(employee_id) + ", "
+                                + std::to_string(door_id) + ", CURRENT_TIMESTAMP, " + access_granted_str + ")";
+            *sql << query;
+        } else {
+            // If the employee id is 0, then the id does not exist in the database
+            std::string query = "INSERT INTO AccessLogs (EmployeeID, DoorID, AccessTime, AccessGranted) VALUES (NULL, "
+                                + std::to_string(door_id) + ", CURRENT_TIMESTAMP, " + access_granted_str + ")";
+            *sql << query;
+        }
+        return ERR_STATE::SUCCESS;
+    } catch (std::exception const &e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        return ERR_STATE::FAILURE;
     }
-    return ER_STATUS::SUCCESS;
-} catch (std::exception const &e) {
-    std::cerr << "Error: " << e.what() << std::endl;
-    return ER_STATUS::FAILURE;
-}
-
 }
 
 int Database::get_door_id() const {
@@ -84,34 +82,26 @@ int Database::get_door_id() const {
 }
 
 
-ER_STATUS Database::send_query(const std::string &query) {
+ERR_STATE Database::send_query(const std::string &query) {
     try {
         *sql << query;
-        return ER_STATUS::SUCCESS;
+        return ERR_STATE::SUCCESS;
     } catch (std::exception const &e) {
         std::cerr << "Error: " << e.what() << std::endl;
-        return ER_STATUS::FAILURE;
+        return ERR_STATE::FAILURE;
     }
 }
 
-ER_STATUS Database::retrieve_fname(int employee_id, std::string &name) {
-
+ERR_STATE Database::retrieve_fname(int employee_id, std::string &name) {
     try {
         *sql << "SELECT EmployeeName FROM Employees WHERE EmployeeID = " << employee_id, soci::into(name);
 
         //get first name from full name
         name = name.substr(0, name.find(' '));
 
-        return ER_STATUS::SUCCESS;
+        return ERR_STATE::SUCCESS;
     } catch (std::exception const &e) {
         std::cerr << "Error: " << e.what() << std::endl;
-        return ER_STATUS::FAILURE;
+        return ERR_STATE::FAILURE;
     }
-
 }
-
-
-
-
-
-
