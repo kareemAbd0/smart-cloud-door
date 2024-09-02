@@ -16,8 +16,6 @@ class App {
 public:
     App(Database &database, Lcd &lcd, Keypad &keypad, Led &led);
 
-    void tester();
-
     void run_loop();
 
 
