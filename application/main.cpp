@@ -27,6 +27,7 @@ int main() {
     App app(db, lcd, keypad, led);
     app.tester();
     std::cout << "finished testing" << std::endl;
+    app.run_loop();
 
     return 0;
 }
