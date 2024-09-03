@@ -16,6 +16,7 @@ App::App(Database &database, Lcd &lcd, Keypad &keypad, Led &led): database(datab
 [[noreturn]] void App::run_loop() const {
     while (true) {
         std::string id;
+        std::string name;
         if (database.connect() == ERR_STATE::SUCCESS) {
             std::cout << "Connected to database" << std::endl;
         } else {
@@ -37,7 +38,6 @@ App::App(Database &database, Lcd &lcd, Keypad &keypad, Led &led): database(datab
 
 
         if (result.id_status == ID_STATUS::AUTHORISED) {
-            std::string name;
             database.retrieve_fname(std::stoi(id), name);
             lcd.display_text("Authorised");
             std::this_thread::sleep_for(std::chrono::seconds(2));

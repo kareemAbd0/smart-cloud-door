@@ -27,7 +27,7 @@ ERR_STATE Database::connect() {
 }
 
 
-VERIFY_RESULT Database::verify_id(int employee_id) const {
+VERIFY_RESULT Database::verify_id(const int employee_id) const {
     try {
         VERIFY_RESULT result{};
         int count;
