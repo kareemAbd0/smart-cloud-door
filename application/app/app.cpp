@@ -40,7 +40,7 @@ App::App(Database &database, Lcd &lcd, Keypad &keypad, Led &led): database(datab
         if (result.id_status == ID_STATUS::AUTHORISED) {
             database.retrieve_fname(std::stoi(id), name);
             lcd.display_text("Authorised");
-            std::this_thread::sleep_for(std::chrono::seconds(2));
+            std::this_thread::sleep_for(std::chrono::seconds(1));
             lcd.clear_display();
 
             lcd.display_text("cloud logging..");
@@ -53,7 +53,7 @@ App::App(Database &database, Lcd &lcd, Keypad &keypad, Led &led): database(datab
             std::cout << "Authorised" << std::endl;
         } else if (result.id_status == ID_STATUS::NOT_AUTHORISED) {
             lcd.display_text("Not Authorised");
-            std::this_thread::sleep_for(std::chrono::seconds(2));
+            std::this_thread::sleep_for(std::chrono::seconds(1));
             lcd.clear_display();
 
             lcd.display_text("cloud logging..");
@@ -63,7 +63,7 @@ App::App(Database &database, Lcd &lcd, Keypad &keypad, Led &led): database(datab
             lcd.display_text("This ID does");
             lcd.change_position("20");
             lcd.display_text("not exist");
-            std::this_thread::sleep_for(std::chrono::seconds(2));
+            std::this_thread::sleep_for(std::chrono::seconds(1));
             lcd.clear_display();
 
             lcd.display_text("cloud logging..");
