@@ -26,16 +26,16 @@ public:
     ERR_STATE connect();
 
 
-    VERIFY_RESULT verify_id(int employee_id);
+    VERIFY_RESULT verify_id(int employee_id) const;
 
-    ERR_STATE log_entry(int employee_id, bool access_granted);
+    ERR_STATE log_entry(int employee_id, bool access_granted) const;
 
     int get_door_id() const;
 
 
-    ERR_STATE send_query(const std::string &query);
+    ERR_STATE send_query(const std::string &query) const;
 
-    ERR_STATE retrieve_fname(int employee_id, std::string &name);
+    ERR_STATE retrieve_fname(int employee_id, std::string &name) const;
 
     ~Database() = default;
 

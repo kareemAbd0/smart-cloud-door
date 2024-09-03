@@ -4,8 +4,6 @@
 
 #pragma once
 
-#include <iostream>
-#include <memory>
 #include "../database/database.h"
 #include "../hw/lcd.h"
 #include "../hw/keypad.h"
@@ -16,7 +14,7 @@ class App {
 public:
     App(Database &database, Lcd &lcd, Keypad &keypad, Led &led);
 
-    void run_loop();
+   [[noreturn]] void run_loop() const;
 
 
 private:

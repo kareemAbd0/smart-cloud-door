@@ -5,8 +5,6 @@
 
 #pragma once
 #include <fstream>
-#include <iostream>
-
 #include "lcd.h"
 #include "err.h"
 class Keypad {

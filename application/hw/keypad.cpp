@@ -25,7 +25,7 @@ Keypad::Keypad(int num, Lcd &lcd): keypad_num(num), lcd(lcd), file_char(path_cha
     }
 }
 
-ERR_STATUS Keypad::get_id(int length, std::string &result) {
+ERR_STATUS Keypad::get_id(const int length, std::string &result) {
     ERR_STATUS err = GOOD;
     set_polling("1");
 
@@ -34,12 +34,12 @@ ERR_STATUS Keypad::get_id(int length, std::string &result) {
 
     //status is set to 1 by kernel driver when a key is pressed
     while (id.size() < length) {
-        std::string c;
         if (get_status(out) == NO_FILE) {
             return NO_FILE;
         }
 
         if (out == "1") {
+            std::string c;
             if (get_char(c) == NO_FILE) {
                 return NO_FILE;
             }

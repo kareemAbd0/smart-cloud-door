@@ -27,14 +27,16 @@ ERR_STATE Database::connect() {
 }
 
 
-VERIFY_RESULT Database::verify_id(int employee_id) {
+VERIFY_RESULT Database::verify_id(int employee_id) const {
     try {
         VERIFY_RESULT result{};
-        int count, employee_department_id, door_department_id;
+        int count;
 
         *sql << "SELECT COUNT(*) FROM Employees WHERE EmployeeID =  " << employee_id, soci::into(count);
 
         if (count > 0) {
+            int employee_department_id;
+            int door_department_id;
             *sql << "SELECT DepartmentID FROM Employees WHERE EmployeeID = " << employee_id, soci::into(
                 employee_department_id);
             *sql << "SELECT DepartmentID FROM Doors WHERE DoorID = " << door_id, soci::into(door_department_id);
@@ -56,9 +58,9 @@ VERIFY_RESULT Database::verify_id(int employee_id) {
 }
 
 
-ERR_STATE Database::log_entry(int employee_id, bool access_granted) {
+ERR_STATE Database::log_entry(const int employee_id, const bool access_granted) const {
     try {
-        std::string access_granted_str = access_granted ? "true" : "false";
+        const std::string access_granted_str = access_granted ? "true" : "false";
         if (employee_id != 0) {
             std::string query = "INSERT INTO AccessLogs (EmployeeID, DoorID, AccessTime, AccessGranted) VALUES (" +
                                 std::to_string(employee_id) + ", "
@@ -82,7 +84,7 @@ int Database::get_door_id() const {
 }
 
 
-ERR_STATE Database::send_query(const std::string &query) {
+ERR_STATE Database::send_query(const std::string &query) const {
     try {
         *sql << query;
         return ERR_STATE::SUCCESS;
@@ -92,7 +94,7 @@ ERR_STATE Database::send_query(const std::string &query) {
     }
 }
 
-ERR_STATE Database::retrieve_fname(int employee_id, std::string &name) {
+ERR_STATE Database::retrieve_fname(const int employee_id, std::string &name) const {
     try {
         *sql << "SELECT EmployeeName FROM Employees WHERE EmployeeID = " << employee_id, soci::into(name);
 

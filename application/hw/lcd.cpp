@@ -37,7 +37,7 @@ ERR_STATUS Lcd::change_position(const std::string &message) {
     ERR_STATUS err = GOOD;
 
     if (message.size() != 2 || !isdigit(message[0]) || !isdigit(message[1]) || message[0] > '2' || message[1] > '5' ||
-        message[1] < '1' || message[0] < '0') {
+        message[1] < '0' || message[0] < '1') {
         std::cout << "Invalid postion " << std::endl;
         return FAIL;
     }

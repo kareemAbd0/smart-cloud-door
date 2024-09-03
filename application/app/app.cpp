@@ -13,10 +13,9 @@ App::App(Database &database, Lcd &lcd, Keypad &keypad, Led &led): database(datab
                                                                   led(led) {
 }
 
-void App::run_loop() {
+[[noreturn]] void App::run_loop() const {
     while (true) {
         std::string id;
-        std::string name;
         if (database.connect() == ERR_STATE::SUCCESS) {
             std::cout << "Connected to database" << std::endl;
         } else {
@@ -38,13 +37,14 @@ void App::run_loop() {
 
 
         if (result.id_status == ID_STATUS::AUTHORISED) {
+            std::string name;
             database.retrieve_fname(std::stoi(id), name);
             lcd.display_text("Authorised");
             std::this_thread::sleep_for(std::chrono::seconds(2));
             lcd.clear_display();
 
-            lcd.display_text("log in cloud..");
-            std::this_thread::sleep_for(std::chrono::seconds(2));
+            lcd.display_text("cloud logging..");
+            std::this_thread::sleep_for(std::chrono::seconds(1));
             lcd.clear_display();
 
             lcd.display_text("Welcome " + name);
@@ -56,18 +56,17 @@ void App::run_loop() {
             std::this_thread::sleep_for(std::chrono::seconds(2));
             lcd.clear_display();
 
-            lcd.display_text("log in cloud..");
+            lcd.display_text("cloud logging..");
             database.log_entry(std::stoi(id), false);
             std::cout << "Not Authorised" << std::endl;
         } else if (result.id_status == ID_STATUS::NON_EXISTANT) {
             lcd.display_text("This ID does");
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
             lcd.change_position("20");
             lcd.display_text("not exist");
             std::this_thread::sleep_for(std::chrono::seconds(2));
             lcd.clear_display();
 
-            lcd.display_text("log in cloud..");
+            lcd.display_text("cloud logging..");
             database.log_entry(0, false);
             std::cout << "This id does not exist" << std::endl;
         }
