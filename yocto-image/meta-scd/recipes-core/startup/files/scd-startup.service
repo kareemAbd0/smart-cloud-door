@@ -1,0 +1,17 @@
+[Unit]
+Description= Auto startup for modules and application
+
+[Service]
+ExecStartPre=/sbin/insmod /lib/modules/5.15.92-v8/extra/lcd_module.ko.xz
+ExecStartPre=/sbin/insmod /lib/modules/5.15.92-v8/extra/gpio-sysfs.ko.xz
+ExecStartPre=/sbin/insmod /lib/modules/5.15.92-v8/extra/keypad_module.ko.xz
+
+ExecStartPre=/bin/sh /usr/bin/postgresql-init.sh
+ExecStartPre=/bin/systemctl start postgresql
+ExecStartPre=/bin/systemctl enable postgresql
+
+ExecStart=/bin/echo "service working"
+
+
+[Install]
+WantedBy=multi-user.target
