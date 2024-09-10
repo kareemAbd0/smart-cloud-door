@@ -32,3 +32,5 @@ The **Smart Cloud Door System** is a secure access control system designed to ve
    ```
 
 4. add the custom device tree binary to the boot partion after flashing the image.
+
+5. enable the systemd service to start the application on boot in 'lib/systemd/system/scd-service'.
